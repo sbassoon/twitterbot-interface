@@ -23,12 +23,15 @@ import tweepy
 import argparse
 import hashlib
 import math
-import wordnik
 import re
 from secrets import *
 from time import gmtime, strftime
 from pythonosc import dispatcher
 from pythonosc import osc_server
+from wordnik import swagger
+from wordnik import WordApi
+from wordnik import WordsApi
+from wordfilter import wordfilter
 
 # ====== Individual bot configuration ==========================
 bot_username = 'sbotssoon'
@@ -117,7 +120,7 @@ def sortAndOrderHash(hash):
 
 
 def tweetOSC(data_type, args):
-    hash_me = str(data_type) + " " + str(args)
+    hash_me = str(data_type) + str(args)
     hashed_str = hashlib.md5(hash_me.encode()).hexdigest()
     reduced_hash = sortAndOrderHash(hashed_str)
 
@@ -125,11 +128,12 @@ def tweetOSC(data_type, args):
     hash_integer_array = [(hash_int//(10**i))%10 for i in range((int(math.ceil(math.log(hash_int, 10))) - 1), -1, -1)]
     hash_list = (re.findall('\d+|\D+', reduced_hash[0]))
 
+    print(hash_integer_array)
+    print(hash_list)
 
 
 
-
-    #tweet(reduced_hash[0])
+    #tweet("null")
 
 
 if __name__ == "__main__":
@@ -141,7 +145,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     dispatcher = dispatcher.Dispatcher()
-    dispatcher.map("/filter", tweetOSC)
+    dispatcher.map("/pipeA", tweetOSC)
+    dispatcher.map("/laneB", tweetOSC)
+    dispatcher.map("/pikeC", tweetOSC)
+    dispatcher.map("/roadD", tweetOSC)
 
     server = osc_server.ThreadingOSCUDPServer(
         (args.ip, args.port), dispatcher)
