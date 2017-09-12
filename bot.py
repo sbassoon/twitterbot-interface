@@ -22,6 +22,8 @@ import os
 import tweepy
 import argparse
 import hashlib
+import wordnik
+import re
 from secrets import *
 from time import gmtime, strftime
 from pythonosc import dispatcher
@@ -58,11 +60,43 @@ def log(message):
         t = strftime("%d %b %Y %H:%M:%S", gmtime())
         f.write("\n" + t + " " + message)
 
+def digital_root(n):
+    x = sum(int(digit) for digit in str(n))
+    if x < 10:
+        return x
+    else:
+        return digital_root(x)
+
+def sortHash(hash):
+    new_split_hash = ''
+    sorted_hash = ''.join(sorted(hash))
+    for entries in sorted_hash:
+        while True:
+            try:
+                int(entries)
+                sum_hash_digits = digital_root(entries)
+                new_split_hash = new_split_hash + str(sum_hash_digits)
+                break
+            except ValueError:
+                str(entries)
+                string_hash_letters = ''.join(sorted(set(entries)))
+                new_split_hash = new_split_hash + string_hash_letters
+                break
+    return new_split_hash
+
 
 def tweetOSC(data_type, args):
     hash_me = str(data_type) + " " + str(args)
-    hashed = hashlib.sha3_512(hash_me.encode())
-    tweet(hashed.hexdigest())
+    hashed = hashlib.md5(hash_me.encode())
+    hashedStr = hashed.hexdigest()
+    #tweet(hashedStr)
+
+    splitHash = (re.findall('\d+|\D+', hashedStr))
+
+    newHash = sortHash(splitHash)
+    print(newHash)
+
+
 
 
 if __name__ == "__main__":
