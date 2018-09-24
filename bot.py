@@ -37,8 +37,6 @@ from wordfilter import wordfilter
 # ====== Individual bot configuration ==========================
 bot_username = 'sbotssoon'
 logfile_name = bot_username + ".log"
-
-
 # ==============================================================
 
 
@@ -125,6 +123,7 @@ def assignLetterFromNumber(number):
     letter_assignment = letters[number]
     return letter_assignment
 
+
 def wordChooser(hash_array, hash_list):
     wordnikAPIUrl = 'http://api.wordnik.com/v4'
     wordnikAPIKey = WORDNIK_KEY
@@ -164,6 +163,7 @@ def wordChooser(hash_array, hash_list):
     else:
         return chosen_word
 
+
 def pronunciationChooser(word):
     wordnikAPIUrl = 'http://api.wordnik.com/v4'
     wordnikAPIKey = WORDNIK_KEY
@@ -195,6 +195,7 @@ def pronunciationChooser(word):
     else:
         return word_pronunciation
 
+
 def definitionChooser(word):
     wordnikAPIUrl = 'http://api.wordnik.com/v4'
     wordnikAPIKey = WORDNIK_KEY
@@ -225,6 +226,7 @@ def definitionChooser(word):
     else:
         return word_definition
 
+
 def exampleChooser(word):
     wordnikAPIUrl = 'http://api.wordnik.com/v4'
     wordnikAPIKey = WORDNIK_KEY
@@ -249,6 +251,7 @@ def exampleChooser(word):
     else:
         return word_example
 
+
 def relatedWordsChooser(word):
     wordnikAPIUrl = 'http://api.wordnik.com/v4'
     wordnikAPIKey = WORDNIK_KEY
@@ -268,11 +271,13 @@ def relatedWordsChooser(word):
     else:
         return word_related
 
+
 def badWordHandler(word):
     if wordfilter.blacklisted(word) == True:
         return True
     elif wordfilter.blacklisted(word) == False:
         return False
+
 
 def tweetLengthFixer(string):
     the_tweet = string
@@ -295,7 +300,7 @@ def createTweet(hash_integer_array,hash_list):
     d_count = 0
     e_count = 0
     f_count = 0
-    word_seed = random.randint(0, 10)
+    word_seed = random.randint(0, 99)
     a_part = ''
     b_part = ''
     c_part = ''
@@ -321,9 +326,9 @@ def createTweet(hash_integer_array,hash_list):
     if a_count == 1:
         a_part = (wordChooser(hash_integer_array, hash_list)).strip()
 
-    if (b_count == 1 and word_seed > 9):
+    if (b_count == 1 and word_seed > 94):
         b_part = (pronunciationChooser(wordChooser(hash_integer_array, hash_list))).strip()
-    elif (b_count == 1 and word_seed <= 9):
+    elif (b_count == 1 and word_seed <= 94):
         b_part = (wordChooser(hash_integer_array, hash_list)).strip()
 
     if c_count == 1:
@@ -355,6 +360,7 @@ def createTweet(hash_integer_array,hash_list):
 
     return the_phrase
 
+
 def tweetOSC(data_type, args):
     hash_me = str(data_type) + str(args)
     hashed_str = hashlib.md5(hash_me.encode()).hexdigest()
@@ -366,6 +372,7 @@ def tweetOSC(data_type, args):
 
     bot_tweet = createTweet(hash_integer_array,hash_list)
 
+    print(bot_tweet)
     tweet(bot_tweet)
 
 
